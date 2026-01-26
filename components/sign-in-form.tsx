@@ -120,8 +120,8 @@ export function SignInForm({
           </>
         )}
       </CardContent>
-      <CardFooter className="flex justify-center">
-        <span className="text-sm text-muted-foreground">
+      <CardFooter className="flex-col justify-center">
+        <span className="text-sm text-muted-foreground py-1">
           Don&apos;t have an account?{" "}
           <a
             href={
@@ -132,6 +132,19 @@ export function SignInForm({
             className="text-primary underline hover:opacity-80"
           >
             Sign up
+          </a>
+        </span>
+        <span className="text-sm text-muted-foreground py-1">
+          Forgot your password?{" "}
+          <a
+            href={"/reset-password"
+              //redirectUrl
+              //  ? `/sign-up?redirect_url=${encodeURIComponent(redirectUrl)}`
+              //  : "/sign-up"
+            }
+            className="text-primary underline hover:opacity-80"
+          >
+            Reset password
           </a>
         </span>
       </CardFooter>
