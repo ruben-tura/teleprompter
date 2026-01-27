@@ -1,7 +1,6 @@
 "use client"
-import { auth } from "@/lib/auth"
 import { authClient } from "@/lib/auth-client"
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { UploadButton } from "@/lib/uploadthing"
 import { useEffect } from "react"
 
