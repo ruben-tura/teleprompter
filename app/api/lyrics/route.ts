@@ -4,7 +4,9 @@ import lyric from "@/schemas/lyric";
 export async function POST(req: Request) {
   try {
     connectDB();
-    const { user, url, order } = await req.json();
+    const { user, url } = await req.json();
+    const count = await lyric.countDocuments({ user });
+    const order = count + 1;
     const newLyric = new lyric({
       user,
       url,

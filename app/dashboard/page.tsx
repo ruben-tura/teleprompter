@@ -22,8 +22,7 @@ export default function DashboardPage() {
     try {
       const { data } = await axios.post(url, {
         user: user?.email,
-        url: res[0].url,
-        order: 1
+        url: res[0].url
       })
       showToast.success("Upload complete!");
       console.log("Data: ", data)
