@@ -1,4 +1,5 @@
 "use client"
+import { Button } from "@/components/ui/button";
 import { useRef, useState, useEffect, useCallback } from "react";
 //BASE
 
@@ -31,16 +32,27 @@ const LyricsComponent = ({ lyrics }: LyricsComponentProps) => {
     rafRef.current = requestAnimationFrame(loop)
   }, [lyrics]);
 
+  const startTimer = () => {
+    if (startTimeRef.current === null) {
+      startTimeRef.current = performance.now();
+      console.log("HAI PREMUTO IL TASTO PLAY: ", startTimeRef);
+      loop();
+    }
+  }
+
+  const stopTimer = () => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      startTimeRef.current = null;
+    }
+  }
+
   useEffect(() => {
     //console.log("Ecco i dati che usiamo: ", lyrics)
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === "Space") {
         e.preventDefault();
-        if (startTimeRef.current === null) {
-          startTimeRef.current = performance.now();
-          console.log("HAI PREMUTO IL TASTO PLAY: ", startTimeRef);
-          loop();
-        }
+        startTimer();
       }
     }
     window.addEventListener("keydown", onKeyDown);
@@ -62,16 +74,22 @@ const LyricsComponent = ({ lyrics }: LyricsComponentProps) => {
   }, [currentIndex])
 
   return (
-    <div className="flex items-center justify-center overflow-y-hidden">
-      <div className="w-screen bg-black text-center h-screen max-h-full overscroll-auto overflow-y-hidden">
-        {lyrics.map((line, index) => (
-          <div
-            key={index}
-            ref={(el) => { lineRefs.current[index] = el }}
-            className={`py-4 transition-all duration-300 text-5xl ${index === currentIndexRef.current ? "font-bold text-amber-300 scale-110" : "opacity-90 text-white"}"}`}>
-            {line.text}
-          </div>
-        ))}
+    <div className="flex flex-row">
+      <div className="flex flex-col">
+        <Button onClick={startTimer} className="cursor-pointer">Play</Button>
+        <Button onClick={stopTimer} className="cursor-pointer">Stop</Button>
+      </div>
+      <div className="flex items-center justify-center overflow-y-hidden">
+        <div className="w-screen bg-black text-center h-screen max-h-full overscroll-auto overflow-y-hidden">
+          {lyrics.map((line, index) => (
+            <div
+              key={index}
+              ref={(el) => { lineRefs.current[index] = el }}
+              className={`py-4 transition-all duration-300 text-5xl ${index === currentIndexRef.current ? "font-bold text-amber-300 scale-110" : "opacity-90 text-white"}"}`}>
+              {line.text}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

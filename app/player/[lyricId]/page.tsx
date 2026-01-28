@@ -30,14 +30,12 @@ export default async function PlayerPage({ params }: PageProps) {
       time: timeToMilliseconds(elem),
       text: linesArray[index]
     }));
-    console.log("lyricObject: ", lyricObject);
     return lyricObject;
   }
 
   const lyricLines = splitLines(lyric);
 
   return <div>
-    <h1>PLAYER: {lyricId}</h1>
     <LyricsComponent lyrics={lyricLines} />
   </div>
 }
