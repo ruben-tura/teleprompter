@@ -3,13 +3,18 @@
 import { ChangePasswordForm, ChangePasswordFormValues } from "@/components/change-password-form";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function ChangePasswordPage() {
-  const token = new URLSearchParams(window.location.search).get("token");
+  const [token, setToken] = useState("");
+  useEffect(() => {
+    setToken(new URLSearchParams(window.location.search).get("token") ?? "");
+  }, [])
+
+  // const token = new URLSearchParams(window.location.search).get("token");
   const router = useRouter();
 
   const handleSubmit = (values: ChangePasswordFormValues) => {
-    console.log("Signin values: ", values);
     if (token) {
       authClient.resetPassword({
         newPassword: values.password,
