@@ -4,10 +4,12 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { sendEmail } from "./mailer";
 
 const uri = process.env.MONGODB_URI;
+const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? "";
 const client = new MongoClient(uri ? uri : "");
 const db = client.db();
 
 export const auth = betterAuth({
+  trustedOrigins: ["http://localhost:3000", "http://192.168.1.198:3000", serverUrl],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,

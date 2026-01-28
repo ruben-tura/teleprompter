@@ -47,12 +47,32 @@ const LyricsComponent = ({ lyrics }: LyricsComponentProps) => {
     }
   }
 
+  const moveBackwards = () => {
+    if (startTimeRef.current) startTimeRef.current += 5000;
+  }
+
+  const moveForwards = () => {
+    if (startTimeRef.current) startTimeRef.current -= 5000;
+  }
+
   useEffect(() => {
     //console.log("Ecco i dati che usiamo: ", lyrics)
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === "Space") {
         e.preventDefault();
-        startTimer();
+        if (startTimeRef.current === null) {
+          const el = lineRefs.current[0];
+          el?.scrollIntoView({ behavior: "smooth", block: "center", });
+          startTimer();
+        } else {
+          stopTimer();
+        }
+      } else if (e.code === "ArrowUp") {
+        e.preventDefault();
+        moveBackwards();
+      } else if (e.code === "ArrowDown") {
+        e.preventDefault();
+        moveForwards();
       }
     }
     window.addEventListener("keydown", onKeyDown);
@@ -78,6 +98,8 @@ const LyricsComponent = ({ lyrics }: LyricsComponentProps) => {
       <div className="flex flex-col">
         <Button onClick={startTimer} className="cursor-pointer">Play</Button>
         <Button onClick={stopTimer} className="cursor-pointer">Stop</Button>
+        <Button onClick={moveBackwards} className="cursor-pointer">Back</Button>
+        <Button onClick={moveForwards} className="cursor-pointer">Forward</Button>
       </div>
       <div className="flex items-center justify-center overflow-y-hidden">
         <div className="w-screen bg-black text-center h-screen max-h-full overscroll-auto overflow-y-hidden">
