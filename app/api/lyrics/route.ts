@@ -19,3 +19,16 @@ export async function POST(req: Request) {
     return Response.json({ error: error }, { status: 400 })
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    connectDB();
+    const { searchParams } = new URL(req.url);
+    const user = searchParams.get("user")
+    const lyrics = await lyric.find({ user }).sort({ order: 1 });
+    return Response.json(lyrics, { status: 201 });
+  } catch (error) {
+    console.log("Error in GET call to /api/lyrics", error);
+    return Response.json({ error: error }, { status: 400 })
+  }
+}
