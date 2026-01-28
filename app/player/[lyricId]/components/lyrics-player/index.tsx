@@ -20,13 +20,13 @@ const LyricsComponent = ({ lyrics }: LyricsComponentProps) => {
     console.log("Eseguo loop...")
     const elapsed = performance.now() - startTimeRef.current
     const nextIndex = lyrics.findLastIndex(
-      (line, index) =>
+      (line) =>
         elapsed >= line.time)
 
     if (nextIndex !== -1 && nextIndex !== currentIndexRef.current) {
       currentIndexRef.current = nextIndex;
-      setCurrentIndex(nextIndex)
-      console.log("Current index: ", currentIndexRef.current)
+      setCurrentIndex(nextIndex);
+      console.log("Current index: ", currentIndexRef.current);
     }
 
     rafRef.current = requestAnimationFrame(loop)
@@ -35,7 +35,6 @@ const LyricsComponent = ({ lyrics }: LyricsComponentProps) => {
   const startTimer = () => {
     if (startTimeRef.current === null) {
       startTimeRef.current = performance.now();
-      console.log("HAI PREMUTO IL TASTO PLAY: ", startTimeRef);
       loop();
     }
   }
@@ -44,6 +43,9 @@ const LyricsComponent = ({ lyrics }: LyricsComponentProps) => {
     if (rafRef.current) {
       cancelAnimationFrame(rafRef.current);
       startTimeRef.current = null;
+      const el = lineRefs.current[0];
+      el?.scrollIntoView({ behavior: "smooth", block: "center", });
+      currentIndexRef.current = 0;
     }
   }
 
@@ -96,10 +98,10 @@ const LyricsComponent = ({ lyrics }: LyricsComponentProps) => {
   return (
     <div className="flex flex-row">
       <div className="flex flex-col">
-        <Button onClick={startTimer} className="cursor-pointer">Play</Button>
-        <Button onClick={stopTimer} className="cursor-pointer">Stop</Button>
-        <Button onClick={moveBackwards} className="cursor-pointer">Back</Button>
-        <Button onClick={moveForwards} className="cursor-pointer">Forward</Button>
+        <Button onClick={startTimer} className="cursor-pointer mt-16 bg-green-900">Play</Button>
+        <Button onClick={stopTimer} className="cursor-pointer mt-4 bg-red-900">Stop</Button>
+        <Button onClick={moveBackwards} className="cursor-pointer mt-4 bg-blue-900">Back</Button>
+        <Button onClick={moveForwards} className="cursor-pointer mt-4 bg-blue-900">Forward</Button>
       </div>
       <div className="flex items-center justify-center overflow-y-hidden">
         <div className="w-screen bg-black text-center h-screen max-h-full overscroll-auto overflow-y-hidden">

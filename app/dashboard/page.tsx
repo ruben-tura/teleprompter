@@ -22,15 +22,14 @@ export default function DashboardPage() {
   }
 
   const handleNewLyric = async (res: any) => {
-    console.log("Files: ", res);
     const url = process.env.NEXT_PUBLIC_SERVER_URL = "/api/lyrics";
     try {
       const { data } = await axios.post(url, {
+        name: res[0].name,
         user: user?.email,
         url: res[0].ufsUrl
       })
       showToast.success("Upload complete!");
-      console.log("Data: ", data)
     } catch (error) {
       showToast.error("Error during upload");
     }
@@ -49,10 +48,12 @@ export default function DashboardPage() {
       <h2>Lyrics list</h2>
       {lyrics.map((lyric, index) => (
         <div className="flex flex-row" key={index}>
-          <Link href={`/player/${lyric.url.split("/").pop()}`} >PLAY</Link>
-          <p className="mx-2">{lyric.user}</p>
-          <p className="mx-2">{lyric.url}</p>
-          <p className="mx-2">{lyric.order}</p>
+          <a href={`/player/${lyric.url.split("/").pop()}`} >
+            <div className="flex flex-row">
+              <p className="mx-2">{lyric.order}</p>
+              <p className="mx-2">Name: {lyric.name}</p>
+            </div>
+          </a>
         </div>
       ))}
       <main className="flex min-h-screen flex-col items-center justify-between p-24">

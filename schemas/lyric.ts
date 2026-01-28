@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 const LyricSchema = new mongoose.Schema<Lyric>(
   {
+    name: { type: String, required: true },
     user: { type: String, required: true },
     url: { type: String, required: true },
     order: { type: Number, required: true }
