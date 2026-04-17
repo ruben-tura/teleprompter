@@ -1,4 +1,11 @@
+"use client"
 import LyricsComponent from "./components/lyrics-player";
+import axios from "axios"
+import { useState } from "react"
+import { Lyric } from "@/types/lyric"
+import { authClient } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 interface PageProps {
   params: Promise<{ lyricId: string }>;
@@ -6,10 +13,21 @@ interface PageProps {
 
 export default async function PlayerPage({ params }: PageProps) {
 
+  const router = useRouter();
   const { lyricId } = await params;
   const lyricUrl = process.env.UPLOADTHING_URL + lyricId;
   const res = await fetch(lyricUrl);
   const lyric = await res.text();
+
+  const [lyricsList, setLyricsList] = useState<Lyric[]>([])
+  const session = authClient.useSession();
+  const user = session.data?.user;
+
+  const getLyricsList = async () => {
+    const url = process.env.NEXT_PUBLIC_SERVER_URL = "/api/lyrics?user=" + user?.email;
+    const { data } = await axios.get(url);
+    setLyricsList(data);
+  }
 
   const timeToMilliseconds = (time: string) => {
     const timeArray = time
@@ -34,6 +52,14 @@ export default async function PlayerPage({ params }: PageProps) {
   }
 
   const lyricLines = splitLines(lyric);
+
+  useEffect(() => {
+    if (!session.isPending && !session.data) {
+      router.push("/")
+    }
+    getLyricsList();
+    console.log(lyricsList);
+  }, [session])
 
   return <div>
     <LyricsComponent lyrics={lyricLines} />
