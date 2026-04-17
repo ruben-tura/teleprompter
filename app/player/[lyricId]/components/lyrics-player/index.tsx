@@ -2,12 +2,34 @@
 import { Button } from "@/components/ui/button";
 import { useRef, useState, useEffect, useCallback } from "react";
 //BASE
+import { useRouter } from "next/navigation"
+import axios from "axios"
+import { Lyric } from "@/types/lyric"
+import { authClient } from "@/lib/auth-client"
 
 interface LyricsComponentProps {
   lyrics: { time: number, text: string }[]
 }
 
 const LyricsComponent = ({ lyrics }: LyricsComponentProps) => {
+  const router = useRouter();
+  const [lyricsList, setLyricsList] = useState<Lyric[]>([])
+  const session = authClient.useSession();
+  const user = session.data?.user;
+
+  const getLyricsList = async () => {
+    const url = process.env.NEXT_PUBLIC_SERVER_URL = "/api/lyrics?user=" + user?.email;
+    const { data } = await axios.get(url);
+    setLyricsList(data);
+  }
+  useEffect(() => {
+    if (!session.isPending && !session.data) {
+      router.push("/")
+    }
+    getLyricsList();
+    console.log(lyricsList);
+  }, [session])
+
   const startTimeRef = useRef<number | null>(null)
   const rafRef = useRef<number | null>(null)
   const currentIndexRef = useRef(0)
