@@ -25,6 +25,7 @@ export default async function PlayerPage({ params }: PageProps) {
 
   const getLyricsList = async () => {
     const url = process.env.NEXT_PUBLIC_SERVER_URL = "/api/lyrics?user=" + user?.email;
+    console.log("provo a chiamare le api")
     const { data } = await axios.get(url);
     setLyricsList(data);
   }
