@@ -35,6 +35,21 @@ export default function DashboardPage() {
     }
   }
 
+  const moveLyric = async (order: number, direction: string) => {
+    const url = process.env.NEXT_PUBLIC_SERVER_URL = "/api/lyrics";
+    try {
+      const { data } = await axios.patch(url, {
+        user: user?.email,
+        order,
+        direction
+      })
+      showToast.success("Move complete!");
+    } catch (error) {
+      showToast.error("Error during lyrics move");
+
+    }
+  }
+
   useEffect(() => {
     if (!session.isPending && !session.data) {
       router.push("/")
@@ -48,12 +63,14 @@ export default function DashboardPage() {
       <h2>Lyrics list</h2>
       {lyrics.map((lyric, index) => (
         <div className="flex flex-row" key={index}>
-          <a href={`/player/${lyric.url.split("/").pop()}`} >
-            <div className="flex flex-row">
-              <p className="mx-2">{lyric.order}</p>
+          <div className="flex flex-row">
+            <p className="mx-2">{lyric.order}</p>
+            <button onClick={() => moveLyric(lyric.order, "up")}>UP</button>
+            <button onClick={() => moveLyric(lyric.order, "down")}>DOWN</button>
+            <a href={`/player/${lyric.url.split("/").pop()}`} >
               <p className="mx-2">Name: {lyric.name}</p>
-            </div>
-          </a>
+            </a>
+          </div>
         </div>
       ))}
       <main className="flex min-h-screen flex-col items-center justify-between p-24">

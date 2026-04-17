@@ -33,3 +33,17 @@ export async function GET(req: Request) {
     return Response.json({ error: error }, { status: 400 })
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    connectDB();
+    const { user, order, direction } = await req.json();
+    const res1 = await lyric.updateOne({ user, order }, { order: -1 });
+    const res2 = await lyric.updateOne({ user, order: direction == "up" ? order - 1 : order + 1 }, { order });
+    const res3 = await lyric.updateOne({ user, order: -1 }, { order: direction == "up" ? order - 1 : order + 1 });
+    return Response.json({ res1, res2, res3 }, { status: 201 });
+  } catch (error) {
+    console.log("Error in PATCH call to /api/lyrics", error);
+    return Response.json({ error: error }, { status: 400 });
+  }
+}
